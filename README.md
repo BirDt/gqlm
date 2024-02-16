@@ -28,6 +28,7 @@ And **BAM!**, you should have a brand spanking new, top of the line GraphQL sche
 Commandline flags reference:
 - `-f` Specifies the input file (defaults to schema.graphql)
 - `-o` Specifies the ouput file (defaults to the value of `-f`)
+
 One or both of these flags must be supplied for gqlm to run.
 
 Now, the good stuff: gqlm adds interface expansions to GraphQL.
