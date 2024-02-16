@@ -1,0 +1,34 @@
+type Tiger implements Animal {
+  ...Animal
+  ...Character
+  cubs: [Tiger]
+}
+
+interface Character {
+  id: ID!
+  name: String!
+  friends: [Character]
+  appearsIn: [Episode]!
+}
+
+interface Animal {
+  id: ID!
+  name: String!
+  scientificName: String!
+}
+
+type Human implements Character {
+  ...Character
+  starships: [Starship]
+  totalCredits: Int
+}
+
+type Droid implements Character {
+  ...Character
+  primaryFunction: String
+}
+
+type Chicken implements Animal {
+  ...Animal
+  eggs: [Egg]
+}
