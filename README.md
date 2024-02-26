@@ -31,7 +31,7 @@ Commandline flags reference:
 
 One or both of these flags must be supplied for gqlm to run.
 
-Now, the good stuff: gqlm adds interface expansions to GraphQL.
+#### GQLM Interface Expansions
 
 What does that mean? It means if you have an interface definition, like so:
 ```graphql
@@ -60,3 +60,19 @@ type Chicken implements Animal {
 And it'll expand into what you would normally have to type manually. Isn't that neat?!
 
 What's more, you aren't limited to just one expansion per type - you can expand any interface in any type as many times as you want. gqlm won't stop you!
+
+#### Enum Comments
+
+Did you know that Appsync doesn't let you write comments in enum types??
+
+For example, in this instance Appsync will parse "This", "is", "a", and "comment" as enum values along with BAR.
+```graphql
+enum Foo {
+	# This is a comment
+	BAR
+}
+```
+
+That's pretty stupid!
+
+Instead of treating comment words within an enum as enum values, gqlm discards all text between '#' and '\n', which apparently is a very difficult thing to do. Don't worry, this only applies to comments within the enum block - gqlm doesn't touch your schema comments anywhere else.
