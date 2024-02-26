@@ -70,9 +70,20 @@ For example, in this instance Appsync will parse "This", "is", "a", and "comment
 enum Foo {
 	# This is a comment
 	BAR
+	# Another comment
+	LOL # Inline comment
 }
 ```
 
 That's pretty stupid!
 
-Instead of treating comment words within an enum as enum values, gqlm discards all text between '#' and '\n', which apparently is a very difficult thing to do. Don't worry, this only applies to comments within the enum block - gqlm doesn't touch your schema comments anywhere else.
+Instead of treating comment words within an enum as enum values, gqlm discards all text between '#' and '\n', which apparently is a very difficult thing to do. (Don't worry, this only applies to comments within the enum block - gqlm doesn't touch your schema comments anywhere else.)
+
+So after running gqlm over that previous definition, you'll end up with a sanitised version of that enum, like so:
+```graphql
+enum Foo {
+	BAR
+	LOL
+}
+```
+Finally! Now you can document internal enum meanings exactly how you would other parts of your schema!
