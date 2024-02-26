@@ -116,12 +116,60 @@
 ;; Get the text of the schema file
 (define schema-text (->string (js-invoke fs "readFileSync" (schema-file))))
 
+;; Get enum definitions and bodies
+(define match-enum (seq (word "enum")
+			(many (char #\space))
+			(many (any-but (char #\space)))
+			(many (char #\space))
+			(char #\{)
+			(many (any-but (char #\})))
+			(char #\})))
+
+(define match-enums (many (either match-enum (discard (any)))))
+(define enums (map (lambda (x)
+		     (fold-left string-append ""
+				(map (lambda (y) (if (list? y)
+						     (list->string y)
+						     (string y))) x)))
+		   (filter (lambda (x) (not (null? x))) (car (match-enums schema-text)))))
+
+;; This is terrible
+(define match-comment-lines (js-new "RegExp" "\\n^\\s*#.*$" "gm"))
+(define match-inline-comments (js-new "RegExp" "#.*$" "gm"))
+
+(define (remove-comment-lines input)
+  (js-invoke
+   input
+   "replace"
+   match-comment-lines
+   ""))
+
+(define (remove-inline-comments input)
+  (js-invoke
+   input
+   "replace"
+   match-inline-comments
+   ""))
+
+;; List of pairs in form ( enum . enum without comments )
+(define enums-with-replacements (map (lambda (x) (cons x (remove-inline-comments (remove-comment-lines x)))) enums))
+
+;; Replace enums with their replacements
+(map (lambda (pr)
+       (set! schema-text
+	 (js-invoke
+	  schema-text
+	  "replace"
+	  (car pr)
+	  (cdr pr))))
+     enums-with-replacements)
+
 ;; Get interface definitions and their bodies
 (define interface-header (seq (word "interface")
-			   (many (char #\space))
-			   (many (any-but (char #\space)))
-			   (many (char #\space))
-			   (char #\{)))
+			      (many (char #\space))
+			      (many (any-but (char #\space)))
+			      (many (char #\space))
+			      (char #\{)))
 (define (match-interface-header input)
   (let ((parse-result (interface-header input)))
     (if parse-result
