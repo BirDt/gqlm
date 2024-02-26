@@ -1,3 +1,10 @@
+enum Foo {
+  # This is a comment
+  BAR
+  # Another comment
+  LOL # Inline comment
+}
+
 type Tiger implements Animal {
   ...Animal
   ...Character
@@ -15,6 +22,11 @@ interface Animal {
   id: ID!
   name: String!
   scientificName: String!
+}
+
+enum AnotherFoo {
+  # This is another comment
+  BAR
 }
 
 type Human implements Character {
